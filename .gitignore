@@ -1,2 +1,5 @@
 project_data.zip
 data/
+.idea/
+.ipynb_checkpoints/
+.vscode/
