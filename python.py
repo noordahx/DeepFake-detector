@@ -155,7 +155,9 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs=25):
         model.load_state_dict(torch.load(best_model_params_path))
     return model
 
-model_ft = models.resnet50(weights='IMAGENET1K_V2')
+
+model_ft = models.resnet50()
+model_ft.load_state_dict(torch.load("resnet50.pth"))
 
 num_ftrs = model_ft.fc.in_features
 
@@ -178,3 +180,29 @@ model_ft = train_model(model_ft, criterion, optimizer_ft, exp_lr_scheduler,
                       num_epochs=150)
 
 torch.save(model_ft.state_dict(), os.path.join(save_path, "resnet50.pt"))
+
+
+model_ft = models.efficientnet_b6()
+model_ft.load_state_dict(torch.load("efficientnet.pth"))
+
+num_ftrs = model_ft.classifier[1].in_features
+
+model_ft.classifier = nn.Sequential(
+    nn.Linear(num_ftrs, num_ftrs//2),
+    nn.ReLU(),
+    nn.Linear(num_ftrs//2, len(class_names)),
+)
+
+model_ft = model_ft.to(device)
+
+criterion = nn.CrossEntropyLoss()
+
+# Observe that all parameters are being optimized
+optimizer_ft = optim.SGD(model_ft.parameters(), lr=0.01)
+
+exp_lr_scheduler = lr_scheduler.StepLR(optimizer_ft, step_size=50, gamma=0.1)
+
+model_ft = train_model(model_ft, criterion, optimizer_ft, exp_lr_scheduler,
+                      num_epochs=150)
+
+torch.save(model_ft.state_dict(), os.path.join(save_path, "efficientnet_b4.pt"))
