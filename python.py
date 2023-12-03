@@ -170,7 +170,7 @@ model_ft = model_ft.to(device)
 criterion = nn.CrossEntropyLoss()
 
 # Observe that all parameters are being optimized
-optimizer_ft = optim.SGD(model_ft.parameters(), lr=0.01, weight_decay=0.01)
+optimizer_ft = optim.SGD(model_ft.parameters(), lr=0.01)
 
 exp_lr_scheduler = lr_scheduler.StepLR(optimizer_ft, step_size=50, gamma=0.1)
 
